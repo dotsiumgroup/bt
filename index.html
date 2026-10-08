@@ -290,6 +290,22 @@ footer{margin-top:auto;padding:28px 16px 18px;border-top:1px solid var(--stroke-
 
 .spin svg{animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* ===== বাটন লোডিং স্পিনার (বাটনের সাইজ অপরিবর্তিত) ===== */
+.is-loading{position:relative !important;box-sizing:border-box !important;pointer-events:none;cursor:progress;
+  color:transparent !important;text-shadow:none !important;overflow:hidden}
+.is-loading > *{visibility:hidden}
+.is-loading::before{content:"";position:absolute;left:50%;top:50%;width:var(--sp,16px);height:var(--sp,16px);
+  margin:calc(var(--sp,16px) / -2) 0 0 calc(var(--sp,16px) / -2);border-radius:50%;
+  background:var(--sp-c,currentColor);opacity:.14;animation:spPulse 1.2s ease-in-out infinite}
+.is-loading::after{content:"";position:absolute;left:50%;top:50%;width:var(--sp,16px);height:var(--sp,16px);
+  margin:calc(var(--sp,16px) / -2) 0 0 calc(var(--sp,16px) / -2);border-radius:50%;
+  background:conic-gradient(from 0deg,transparent 0deg,var(--sp-c,currentColor) 340deg,transparent 360deg);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--sw,2.5px)),#000 calc(100% - var(--sw,2.5px) + .5px));
+          mask:radial-gradient(farthest-side,transparent calc(100% - var(--sw,2.5px)),#000 calc(100% - var(--sw,2.5px) + .5px));
+  animation:spRot .7s cubic-bezier(.45,.1,.55,.9) infinite;filter:drop-shadow(0 0 3px var(--sp-c,currentColor))}
+@keyframes spRot{to{transform:rotate(360deg)}}
+@keyframes spPulse{0%,100%{transform:scale(.7);opacity:.08}50%{transform:scale(1.05);opacity:.2}}
+
 
 @media(max-width:420px){
   .vt-btn{padding:0 12px;font-size:10px;letter-spacing:.5px}
@@ -729,7 +745,7 @@ textarea.input{resize:vertical;line-height:1.6;font-family:inherit}
 
 </div>
 
-<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+<div class="modal-bg" id="modalBg">
   <div class="modal" id="modalContent"></div>
 </div>
 <div id="toast"></div>
@@ -848,7 +864,38 @@ async function act(action, payload){
   }
 }
 let _busy = false;
-async function once(fn){ if (_busy) return; _busy = true; try{ await fn(); } finally{ _busy = false; } }
+function btnLoading(btn, on){
+  if (!btn) return;
+  if (on){
+    const r = btn.getBoundingClientRect();
+    btn._sv = { w: btn.style.width, h: btn.style.height, mw: btn.style.minWidth, mh: btn.style.minHeight };
+    btn.style.width = r.width + 'px'; btn.style.height = r.height + 'px';
+    btn.style.minWidth = r.width + 'px'; btn.style.minHeight = r.height + 'px';
+    const sp = Math.max(10, Math.min(22, Math.round(Math.min(r.height, r.width) * 0.52)));
+    btn.style.setProperty('--sp', sp + 'px');
+    btn.style.setProperty('--sw', (sp >= 18 ? 3 : 2.2) + 'px');
+    btn.style.setProperty('--sp-c', getComputedStyle(btn).color);
+    btn.classList.add('is-loading');
+    btn.setAttribute('aria-busy', 'true');
+  } else {
+    btn.classList.remove('is-loading');
+    btn.removeAttribute('aria-busy');
+    const v = btn._sv || {};
+    btn.style.width = v.w || ''; btn.style.height = v.h || '';
+    btn.style.minWidth = v.mw || ''; btn.style.minHeight = v.mh || '';
+    btn.style.removeProperty('--sp'); btn.style.removeProperty('--sw'); btn.style.removeProperty('--sp-c');
+  }
+}
+async function once(fn){
+  if (_busy) return;
+  _busy = true;
+  const ev = window.event;
+  let btn = ev && ev.currentTarget;
+  if (btn && btn.closest) btn = btn.closest('button');
+  else btn = null;
+  btnLoading(btn, true);
+  try{ await fn(); } finally{ _busy = false; btnLoading(btn, false); }
+}
 function loadingBox(t){ return `<div class="loadline">${t || 'লোড হচ্ছে...'}</div>`; }
 async function refreshStock(){
   const d = await act('getStock');
