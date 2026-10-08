@@ -1,22 +1,21 @@
-const CACHE_NAME = 'bismillah-cache-v2'; // প্রতিবার ওয়েবসাইট আপডেট করার সময় এই সংখ্যাটি বাড়াবেন (v3, v4...)
-const urlsToCache = ['/bt/', '/bt/index.html'];
+const CACHE_NAME = 'bismillah-cache-v3'; // ⚠️ প্রতিবার আপডেটে শুধু এই সংখ্যা বাড়াবেন (v4, v5...)
 
-// নতুন Service Worker ইনস্টল হওয়ার সাথে সাথেই সক্রিয় করে দেয়
+// নতুন Service Worker ইনস্টল হওয়ার সাথে সাথেই সক্রিয় (skipWaiting)
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(['/bt/', '/bt/index.html']))
   );
 });
 
-// নতুন Service Worker সক্রিয় হওয়ার সাথে সাথেই সমস্ত ট্যাব/অ্যাপের নিয়ন্ত্রণ নেয়
+// নতুন Service Worker সক্রিয় হওয়ার সাথে সাথেই সব ট্যাবের নিয়ন্ত্রণ নেয় (clients.claim)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
+            return caches.delete(cacheName); // পুরোনো ক্যাশ মুছে ফেলে
           }
         })
       );
@@ -24,21 +23,19 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Network-First স্ট্র্যাটেজি: প্রথমে নেটওয়ার্ক থেকে নতুন ফাইল আনে, ব্যর্থ হলে ক্যাশ থেকে আনে
+// Network-First: প্রথমে সার্ভার থেকে নতুন ফাইল খোঁজে, ব্যর্থ হলে ক্যাশ থেকে দেখায়
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // নেটওয়ার্ক থেকে সফলভাবে ফাইল এলে ক্যাশে সংরক্ষণ করে
         const responseClone = response.clone();
         caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseClone);
+          cache.put(event.request, responseClone); // নতুন ফাইল ক্যাশে সেভ করে
         });
         return response;
       })
       .catch(() => {
-        // নেটওয়ার্ক ব্যর্থ হলে ক্যাশ থেকে ফাইল ফেরত দেয়
-        return caches.match(event.request);
+        return caches.match(event.request); // নেট না থাকলে ক্যাশ থেকে দেয়
       })
   );
 });
