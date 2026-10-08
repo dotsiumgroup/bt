@@ -7,7 +7,9 @@
 <meta name="theme-color" content="#FFCA33">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-<style>
+<link rel="manifest" href="/bt/manifest.json">
+<meta name="theme-color" content="#000000">
+  <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
   --bg:#05080f;--panel:rgba(255,255,255,.04);--panel-2:rgba(255,255,255,.07);
@@ -1841,5 +1843,10 @@ function toast(msg, type){
   loadHomeStats();
 })();
 </script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/bt/sw.js');
+  }
+  </script>
 </body>
 </html>
