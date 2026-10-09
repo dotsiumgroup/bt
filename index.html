@@ -654,7 +654,8 @@ textarea.input{resize:vertical;line-height:1.6;font-family:inherit}
         <li><span class="av">✔️</span><span><b>MD. SELIM HOSSAIN</b><small>Junior Technician</small></span></li>
         <li><span class="av">✔️</span><span><b>SAHIBUL MUSA SIUM</b><small>Junior Technician</small></span></li>
       </ul>
-      <div class="copy">© <span id="year"></span> BISMILLAH TELICOM — All rights reserved. Powered by <b>A.F I.M GROUP</b> &amp; <b>.SIUM GROUP</b></div>
+      <div class="copy">© <span id="year"></span> BISMILLAH TELICOM — All rights reserved.</div>
+    </div>
   </div>
 
   <div class="view" id="view-combo">
@@ -1890,8 +1891,45 @@ function toast(msg, type){
 })();
 </script>
   <script>
+  /* ===== স্থায়ী সুরক্ষা: নিজে আপডেট + সাদা স্ক্রিন হলে এক চাপে মেরামত ===== */
+  async function repairSite(){
+    try{
+      if ('serviceWorker' in navigator){ const rs = await navigator.serviceWorker.getRegistrations(); await Promise.all(rs.map(r => r.unregister())); }
+      if (window.caches){ const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); }
+    }catch(e){}
+    location.reload();
+  }
+  (function(){
+    let shown = false;
+    function showFix(msg){
+      if (shown) return; shown = true;
+      const d = document.createElement('div');
+      d.style.cssText = 'position:fixed;left:10px;right:10px;bottom:80px;z-index:99999;background:#111;color:#fff;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 28px rgba(0,0,0,.35);font:600 13px system-ui,sans-serif';
+      d.innerHTML = '<span style="flex:1">কিছু সমস্যা হয়েছে। ঠিক করতে নিচের বাটন চাপুন।</span><button style="background:#f5b800;color:#000;border:0;border-radius:10px;padding:9px 14px;font:700 13px system-ui,sans-serif">ঠিক করুন</button>';
+      d.querySelector('button').onclick = repairSite;
+      document.body.appendChild(d);
+    }
+    const ignore = /ServiceWorker|ResizeObserver|Script error|Failed to fetch|NetworkError|Load failed/i;
+    window.addEventListener('error', e => { if (!ignore.test(e.message || '')) showFix(); });
+    window.addEventListener('unhandledrejection', e => { const m = String((e.reason && e.reason.message) || e.reason || ''); if (!ignore.test(m)) showFix(); });
+  })();
+
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/bt/sw.js');
+    const hadController = !!navigator.serviceWorker.controller;
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!hadController || reloaded) return;   // প্রথমবার ইনস্টলে রিলোড নয়, শুধু নতুন সংস্করণ এলে
+      reloaded = true; location.reload();
+    });
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/bt/sw.js', { updateViaCache: 'none' })
+        .then(reg => {
+          reg.update();
+          document.addEventListener('visibilitychange', () => { if (!document.hidden) reg.update(); });
+          setInterval(() => reg.update(), 30 * 60 * 1000);
+        })
+        .catch(() => {});
+    });
   }
   </script>
 </body>
