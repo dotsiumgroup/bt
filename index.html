@@ -594,6 +594,25 @@ textarea.input{resize:vertical;line-height:1.6;font-family:inherit}
 .cf-actions{display:flex;gap:6px;flex-wrap:wrap}
 .cf-actions .btn-xs{padding:8px 12px;font-size:12px;flex:1;justify-content:center}
 .cf-actions .btn-xs[disabled]{opacity:.4;pointer-events:none}
+/* টেক্সট সিলেক্ট ও লং-প্রেস মেনু বন্ধ */
+html, body, body *{
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+  -webkit-tap-highlight-color:transparent;
+}
+img, a, svg{
+  -webkit-user-drag:none;
+  user-drag:none;
+}
+
+/* ইনপুট বক্সে টাইপ ও কপি-পেস্ট ঠিক থাকবে */
+input, textarea, select, [contenteditable="true"]{
+  -webkit-user-select:text !important;
+  user-select:text !important;
+  -webkit-touch-callout:default !important;
+}
+    
 </style>
 </head>
 <body>
@@ -654,7 +673,7 @@ textarea.input{resize:vertical;line-height:1.6;font-family:inherit}
         <li><span class="av">✔️</span><span><b>MD. SELIM HOSSAIN</b><small>Junior Technician</small></span></li>
         <li><span class="av">✔️</span><span><b>SAHIBUL MUSA SIUM</b><small>Junior Technician</small></span></li>
       </ul>
-      <div class="copy">© <span id="year"></span> BISMILLAH TELICOM — All rights reserved.</div>
+      <div class="copy">© <span id="year"></span> BISMILLAH TELICOM — All rights reserved. Powered by <b>A.F I.M GROUP</b> &amp; <b>. SIUM GROUP</b></div>
     </div>
   </div>
 
@@ -1889,6 +1908,33 @@ function toast(msg, type){
   refreshModels(false).then(() => { renderHome(); renderStock(); });
   loadHomeStats();
 })();
+
+  const isField = el => el && el.closest && el.closest('input,textarea,select,[contenteditable="true"]');
+
+/* লং-প্রেস / রাইট-ক্লিক মেনু (ছবি ডাউনলোড, লিংক কপি) বন্ধ — ক্লিকে কোনো প্রভাব নেই */
+document.addEventListener('contextmenu', e => { if (!isField(e.target)) e.preventDefault(); });
+document.addEventListener('selectstart',  e => { if (!isField(e.target)) e.preventDefault(); });
+document.addEventListener('copy', e => { if (!isField(e.target)) e.preventDefault(); });
+document.addEventListener('cut',  e => { if (!isField(e.target)) e.preventDefault(); });
+document.addEventListener('dragstart', e => e.preventDefault());
+
+/* ছবি টেনে নামানো বন্ধ (ক্লিক আগের মতোই চলবে) */
+function lockImgs(root){
+  (root || document).querySelectorAll('img').forEach(i => { i.draggable = false; });
+}
+lockImgs();
+new MutationObserver(m => m.forEach(x => x.addedNodes.forEach(n => {
+  if (n.nodeType === 1) { if (n.tagName === 'IMG') n.draggable = false; else lockImgs(n); }
+}))).observe(document.body, { childList:true, subtree:true });
+
+/* কম্পিউটারে Ctrl+C / U / S / A / P ও F12 বন্ধ (ইনপুটে চলবে) */
+document.addEventListener('keydown', e => {
+  const k = (e.key || '').toLowerCase();
+  const mod = e.ctrlKey || e.metaKey;
+  if (isField(e.target) && mod && ['c','v','x','a'].includes(k)) return;
+  if (mod && ['c','u','s','a','p'].includes(k)) e.preventDefault();
+  if (e.key === 'F12') e.preventDefault();
+});
 </script>
   <script>
   /* ===== স্থায়ী সুরক্ষা: নিজে আপডেট + সাদা স্ক্রিন হলে এক চাপে মেরামত ===== */
