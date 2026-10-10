@@ -1,6 +1,6 @@
 /* BT Service Worker — স্থায়ী ও নিরাপদ সংস্করণ
    নিয়ম: ক্যাশ ভার্সন আর হাতে বাড়াতে হবে না। HTML সবসময় আগে সার্ভার থেকে আনে। */
-const CACHE_NAME = 'bt-cache-v6';
+const CACHE_NAME = 'bt-cache-v1';
 const SCOPE_PATH = '/bt/';
 const PRECACHE = ['/bt/', '/bt/index.html', '/bt/manifest.json', '/bt/icon-192.png', '/bt/icon-512.png'];
 
@@ -37,6 +37,10 @@ function fetchFresh(request, ms) {
   return fetch(request, { cache: 'no-cache', signal: ctrl.signal }).finally(() => clearTimeout(t));
 }
 
+function notifyNewVersion() {
+  self.clients.matchAll({ type: 'window' }).then((cs) => cs.forEach((c) => c.postMessage({ type: 'NEW_VERSION' })));
+}
+
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   const url = new URL(req.url);
@@ -46,16 +50,25 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
   if (!url.pathname.startsWith(SCOPE_PATH)) return;
 
-  // ২) পেজ (HTML): আগে সার্ভার, ব্যর্থ হলে ক্যাশ
+  // ২) পেজ (HTML): সঙ্গে সঙ্গে ক্যাশ থেকে খোলে (অপেক্ষা নেই, অফলাইনেও চলে), পেছনে নতুন সংস্করণ এনে রাখে
   if (req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html')) {
-    event.respondWith(
-      fetchFresh(req, 6000)
-        .then((res) => { saveToCache(req, res); return res; })
-        .catch(() =>
-          caches.match(req).then((r) => r || caches.match('/bt/index.html') || caches.match('/bt/') ||
-            new Response('অফলাইন — ইন্টারনেট চালু করে আবার চেষ্টা করুন', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } }))
-        )
-    );
+    event.respondWith((async () => {
+      const cached = (await caches.match(req, { ignoreSearch: true })) ||
+                     (await caches.match('/bt/index.html')) || (await caches.match('/bt/'));
+      const update = fetchFresh(req, 15000).then(async (res) => {
+        if (res && res.ok && !res.redirected) {
+          const oldTxt = cached ? await cached.clone().text() : null;
+          const newTxt = await res.clone().text();
+          saveToCache(req, res.clone());
+          if (oldTxt !== null && oldTxt !== newTxt) notifyNewVersion();
+        }
+        return res;
+      }).catch(() => null);
+      if (cached) { event.waitUntil(update); return cached; }
+      const res = await update;
+      return res || new Response('অফলাইন — ইন্টারনেট চালু করে আবার চেষ্টা করুন',
+        { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
+    })());
     return;
   }
 
