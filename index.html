@@ -1528,7 +1528,7 @@ function openAddOrder(){
     <div class="field"><label>কাস্টমারের নাম <span class="req">*</span></label><input id="orCustomer" class="input"></div>
     <div class="field"><label>মোবাইল</label><input id="orPhone" class="input" placeholder="01XXXXXXXXX"></div>
     <div class="field"><label>পণ্য <span class="req">*</span></label><input id="orItem" class="input" placeholder="iPhone 11 Display"></div>
-    <div class="field"><label>মূল্য ৳</label><input id="orPrice" class="input" type="number" value="0"></div>
+    <div class="field"><label>অগ্রিম মূল্য প্রদান</label><input id="orPrice" class="input" type="number" value="0"></div>
     <div class="hint">অর্ডার সেভ হলে পণ্যের নাম নিজে থেকে <b>কার্ট</b>-এ চলে যাবে।</div>
     <button class="btn-primary" onclick="saveNewOrder()">সংরক্ষণ</button>
   `);
@@ -1554,7 +1554,7 @@ function editOrder(id){
     <div class="field"><label>নাম</label><input id="edOrCustomer" class="input" value="${escA(o.customer)}"></div>
     <div class="field"><label>মোবাইল</label><input id="edOrPhone" class="input" value="${escA(o.phone||'')}"></div>
     <div class="field"><label>পণ্য</label><input id="edOrItem" class="input" value="${escA(o.item)}"></div>
-    <div class="field"><label>মূল্য ৳</label><input id="edOrPrice" class="input" type="number" value="${o.price||0}"></div>
+    <div class="field"><label>অগ্রিম মূল্য প্রদান</label><input id="edOrPrice" class="input" type="number" value="${o.price||0}"></div>
     <button class="btn-primary" onclick="saveEditOrder(${id})">আপডেট</button>
   `);
 }
