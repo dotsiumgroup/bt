@@ -1,8 +1,8 @@
 /* BT Service Worker — স্থায়ী ও নিরাপদ সংস্করণ
    নিয়ম: ক্যাশ ভার্সন আর হাতে বাড়াতে হবে না। HTML সবসময় আগে সার্ভার থেকে আনে। */
-const CACHE_NAME = 'bt-cache-v1';
+const CACHE_NAME = 'bt-cache-v8';
 const SCOPE_PATH = '/bt/';
-const PRECACHE = ['/bt/', '/bt/index.html', '/bt/manifest.json', '/bt/icon-192.png', '/bt/icon-512.png'];
+const PRECACHE = ['/bt/', '/bt/index.html', '/bt/manifest.json', '/bt/LOGO-icon-192.png', '/bt/LOGO-icon-512.png'];
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
