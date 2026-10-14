@@ -2392,6 +2392,48 @@ function toast(msg, type){
     });
   }
   </script>
+  <!-- Pull-to-Refresh এবং অটো-আপডেট সিস্টেম -->
+<script>
+  // ১. পেজ লোড হলে Service Worker কে নতুন কনটেন্ট চেক করতে বলবে
+  window.addEventListener('load', () => {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({ type: 'CHECK_FOR_UPDATE' });
+    }
+  });
+
+  // ২. Service Worker থেকে Message এলে হ্যান্ডেল করা
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'NEW_VERSION') {
+        // নতুন ভার্সন পাওয়া গেলে ইউজারকে জানানো (চাইলে অটো রিলোড করতে পারেন)
+        console.log('নতুন আপডেট পাওয়া গেছে!');
+      }
+    });
+  }
+
+  // ৩. Pull-to-Refresh ডিটেক্ট করা (Touch Events দিয়ে)
+  let touchStartY = 0;
+  let touchEndY = 0;
+
+  window.addEventListener('touchstart', (e) => {
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+
+  window.addEventListener('touchend', (e) => {
+    touchEndY = e.changedTouches[0].screenY;
+    // যদি ব্যবহারকারী উপরে থেকে নিচে টান দেয় (৫০ পিক্সেলের বেশি) এবং পেজ একদম উপরে থাকে
+    if (touchEndY - touchStartY > 50 && window.scrollY === 0) {
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        // Service Worker কে বলবে ক্যাশ bypass করে নতুন ফাইল আনতে
+        navigator.serviceWorker.controller.postMessage({ type: 'FORCE_REFRESH' });
+        // ৩০০ মিলিসেকেন্ড পর পেজ রিলোড করবে, যাতে SW নতুন ফাইল আনতে পারে
+        setTimeout(() => window.location.reload(), 300);
+      } else {
+        window.location.reload();
+      }
+    }
+  }, { passive: true });
+</script>
 </body>
 </html>
 
