@@ -606,6 +606,29 @@ textarea.input{resize:vertical;line-height:1.6;font-family:inherit}
 .cf-actions{display:flex;gap:6px;flex-wrap:wrap}
 .cf-actions .btn-xs{padding:8px 12px;font-size:12px;flex:1;justify-content:center}
 .cf-actions .btn-xs[disabled]{opacity:.4;pointer-events:none}
+
+/* ===== ROUND 3 ===== */
+/* LINE1: মিলে যাওয়া মডেল বক্স নয়, শুধু রঙিন লেখা */
+.line1-body .l1-hit{background:none;border:0;padding:0;border-radius:0;display:inline;color:#d9480f;font-weight:800}
+.stk-note{margin:0 2px 10px;font-size:11.5px;line-height:1.65;color:#b36b00;font-weight:600}
+.stk-note p + p{margin-top:3px}
+.lbl-sub{margin:14px 2px 6px;font-size:11px;font-weight:700;color:var(--muted)}
+.qty-pill.low{background:#fff4dc;color:#b36b00;border:1px solid #f3d796}
+.sel-card .pnote{font-size:10.5px;color:#8a5a00;margin-top:6px;line-height:1.5}
+/* নিজস্ব ড্রপডাউন */
+.dd{position:relative}
+.dd-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 11px;border-radius:9px;background:#fff;border:1px solid var(--stroke);color:var(--text);font-size:12.5px;font-weight:600;text-align:left;transition:.18s}
+.dd-btn .ph{color:#a0a7b4;font-weight:500}
+.dd-btn svg{width:15px;height:15px;transition:transform .2s;flex-shrink:0;color:#8b93a5}
+.dd.open .dd-btn{border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,86,216,.13)}
+.dd.open .dd-btn svg{transform:rotate(180deg);color:var(--blue)}
+.dd-menu{display:none;margin-top:6px;max-height:212px;overflow-y:auto;border:1px solid var(--stroke);border-radius:12px;background:#fff;box-shadow:0 12px 28px -16px rgba(16,24,40,.4);padding:4px}
+.dd.open .dd-menu{display:block;animation:fadeUp .18s ease}
+.dd-opt{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 11px;border-radius:8px;font-size:12.5px;font-weight:600;color:#2a3140;text-align:left}
+.dd-opt:active{background:#eaf0ff;color:var(--blue)}
+.dd-opt.on{background:#eaf0ff;color:var(--blue)}
+.dd-opt.on::after{content:'✓';font-weight:800}
+.dd-opt.other{color:#8a5a00;border-top:1px dashed var(--stroke-2);border-radius:0 0 8px 8px;margin-top:3px}
 </style>
 </head>
 <body>
@@ -657,14 +680,14 @@ textarea.input{resize:vertical;line-height:1.6;font-family:inherit}
       </div>
       <div class="sec-sub">প্রোপ্রাইটর</div>
       <ul class="people">
-        <li><span class="av">👤</span><span><b>OBAIDUL KHAN PRESS</b><small>PROPRIETOR & TECHNICAL DIRECTOR</small></span></li>
-        <li><span class="av">👤</span><span><b>MD. SHEIKH FORID</b><small>PROPRIETOR & COMMERCIAL DIRECTOR</small></span></li>
+        <li><span class="av">👤</span><span><b>OBAIDUL KHAN PRESS</b><small>PROPRIETOR &amp; TECHNICAL DIRECTOR</small></span></li>
+        <li><span class="av">👤</span><span><b>MD. SHEIKH FORID</b><small>PROPRIETOR &amp; COMMERCIAL DIRECTOR</small></span></li>
       </ul>
       <div class="sec-sub">আমাদের টিম</div>
       <ul class="people">
-        <li><span class="av">✔️</span><span><b>MD. ARIFUL ISLAM</b><small>Senior Technician</small></span></li>
-        <li><span class="av">✔️</span><span><b>MD. SELIM HOSSAIN</b><small>Junior Technician</small></span></li>
-        <li><span class="av">✔️</span><span><b>SAHIBUL MUSA SIUM</b><small>Junior Technician</small></span></li>
+        <li><span class="av">👤</span><span><b>MD. ARIFUL ISLAM</b><small>Senior Technician</small></span></li>
+        <li><span class="av">👤</span><span><b>MD. SELIM HOSSAIN</b><small>Junior Technician</small></span></li>
+        <li><span class="av">👤</span><span><b>SAHIBUL MUSA SIUM</b><small>Junior Technician</small></span></li>
       </ul>
       <div class="copy">© <span id="year"></span> BISMILLAH TELICOM — All rights reserved. Powered by <b>A.F I.M GROUP</b> &amp; <b>. SIUM GROUP</b></div>
     </div>
@@ -702,6 +725,7 @@ textarea.input{resize:vertical;line-height:1.6;font-family:inherit}
       <input type="text" id="displaySearch" placeholder="ফোন মডেল লিখে সার্চ করুন..." autocomplete="off" oninput="renderDisplays()">
       <button class="clr" id="clrBtn" onclick="clearSearch()" aria-label="Clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
+    <div id="partsNote"></div>
     <div class="list" id="displayList"></div>
   </div>
 
@@ -731,6 +755,7 @@ textarea.input{resize:vertical;line-height:1.6;font-family:inherit}
       <div class="ph-actions"><button class="btn-blue sm" onclick="go('sales')">💰 সেল</button><button class="btn-blue sm ghost" onclick="openAddStock()">＋ নতুন</button></div></div>
     <div class="stats stats3" id="stockStats"></div>
     <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="stockSearch" placeholder="স্টকে মডেল খুঁজুন..." autocomplete="off" oninput="renderStock()"></div>
+    <div id="stockNote"></div>
     <div class="tabs" id="stockTabs" style="margin-top:10px"></div>
     <div class="list" id="stockList"></div>
   </div>
@@ -780,6 +805,9 @@ const emptyData = () => ({ display:[], glass:[], uv:[], battery:[], frame:[], ba
 let state = { data: emptyData(), cat:'display', orders:[], ordersLoaded:false, ordersLoading:false, cart:[], cartLoaded:false, cartTab:'pending', stockFilter:'all', salesData:null, saleSel:null, loading:false, error:'', viewMode:'card' };
 
 /* ===== API + অফলাইন ক্যাশ + লাইভ সিঙ্ক ===== */
+/* ===== তথ্য সুরক্ষা: খালি/ভাঙা সারি থাকলেও পেজ সাদা হবে না ===== */
+function arrOf(v){ return Array.isArray(v) ? v.filter(x => x && typeof x === 'object') : []; }
+function stockArr(v){ return Array.isArray(v) ? v.filter(e => e && typeof e === 'object' && e.name !== null && e.name !== undefined && String(e.name).trim() !== '') : []; }
 const SNAP_KEY = 'bt_snapshot_v1', READ_TIMEOUT = 25000, RETRY_MS = 5000;
 const READ_ACTIONS = ['getAll','getOrders','getCart','getSales','getStock'];
 const RT = { timeout: READ_TIMEOUT };
@@ -802,8 +830,10 @@ function snapSave(){ clearTimeout(_snapT); _snapT = setTimeout(snapWrite, 300); 
 function snapRestore(){
   const s = snapLoad(); if (!s) return false;
   state.data = Object.assign(emptyData(), s.data || {});
-  if (s.ordersLoaded){ state.orders = s.orders || []; state.ordersLoaded = true; }
-  if (s.cartLoaded){ state.cart = s.cart || []; state.cartLoaded = true; }
+  Object.keys(emptyData()).forEach(k => { if (k !== 'stockReady' && !Array.isArray(state.data[k])) state.data[k] = []; });
+  state.data.stock = stockArr(state.data.stock);
+  if (s.ordersLoaded){ state.orders = arrOf(s.orders); state.ordersLoaded = true; }
+  if (s.cartLoaded){ state.cart = arrOf(s.cart); state.cartLoaded = true; }
   if (s.salesData) state.salesData = s.salesData;
   _everData = true;
   return true;
@@ -862,12 +892,13 @@ async function liveSync(o){
   if (all){
     const f = emptyData();
     Object.keys(f).forEach(k => { if (k !== 'stockReady') f[k] = Array.isArray(all[k]) ? all[k] : []; });
+    f.stock = stockArr(f.stock);
     f.stockReady = !!all.stockReady;
     if (!same(f, state.data)){ state.data = f; chData = true; }
     _everData = true;
   }
-  if (od){ const v = od.orders || []; if (!state.ordersLoaded || !same(v, state.orders)){ state.orders = v; state.ordersLoaded = true; chOrd = true; } }
-  if (cd){ const v = cd.cart || []; if (!state.cartLoaded || !same(v, state.cart)){ state.cart = v; state.cartLoaded = true; chCart = true; } }
+  if (od){ const v = arrOf(od.orders); if (!state.ordersLoaded || !same(v, state.orders)){ state.orders = v; state.ordersLoaded = true; chOrd = true; } }
+  if (cd){ const v = arrOf(cd.cart); if (!state.cartLoaded || !same(v, state.cart)){ state.cart = v; state.cartLoaded = true; chCart = true; } }
   if (sd && sd.salesData){
     const viewingPast = state.salesData && state.salesData.month !== sd.salesData.month;
     if (!viewingPast && !same(sd.salesData, state.salesData)){ state.salesData = sd.salesData; chSale = true; }
@@ -908,8 +939,8 @@ async function loadHomeStats(){
   const [o, c, sl] = await Promise.all([quiet('getOrders', null, RT), quiet('getCart', null, RT), quiet('getSales', {}, RT)]);
   if (_wv !== wv) return;
   let ch = false;
-  if (o){ const v = o.orders || []; if (!state.ordersLoaded || !same(v, state.orders)){ state.orders = v; state.ordersLoaded = true; ch = true; } }
-  if (c){ const v = c.cart || []; if (!state.cartLoaded || !same(v, state.cart)){ state.cart = v; state.cartLoaded = true; ch = true; } }
+  if (o){ const v = arrOf(o.orders); if (!state.ordersLoaded || !same(v, state.orders)){ state.orders = v; state.ordersLoaded = true; ch = true; } }
+  if (c){ const v = arrOf(c.cart); if (!state.cartLoaded || !same(v, state.cart)){ state.cart = v; state.cartLoaded = true; ch = true; } }
   if (sl && !same(sl.salesData, state.salesData)){ state.salesData = sl.salesData; ch = true; }
   if (ch) renderHome();
 }
@@ -926,7 +957,7 @@ function renderHome(){
   const pcs = stock.reduce((t,e) => t + (e.qty || 0), 0);
   const pendOrders = state.ordersLoaded ? state.orders.filter(o => orderState(o) === 'pending').length : null;
   const cartPend = state.cartLoaded ? cartGroups(state.cart.filter(c => c.status !== 'bought')).length : null;
-  const out = state.data.stockReady ? stock.filter(e => e.qty === 0).length : null;
+  const out = state.data.stockReady ? stock.filter(isOut).length : null;
   const f = v => v === null || v === undefined ? '—' : bn(v);
   box.innerHTML = `<div class="sec-card stats-card">
     <div class="sc-top">
@@ -992,7 +1023,7 @@ function loadingBox(t){ return `<div class="loadline">${t || 'লোড হচ�
 async function refreshStock(){
   const d = await quiet('getStock', null, RT);
   if (!d) return false;
-  const st = d.stock || []; let ch = false;
+  const st = stockArr(d.stock); let ch = false;
   if (!same(st, state.data.stock)){ state.data.stock = st; ch = true; }
   if (!state.data.stockReady){ state.data.stockReady = true; ch = true; }
   return ch;
@@ -1045,7 +1076,25 @@ function updateToggleUI(){
 /* ===== PARSE ===== */
 const BRANDS = ['Samsung','Vivo','Oppo','Realme','Redmi','Poco','Moto','Infinix','Tecno','OnePlus','iQOO'];
 const SPLIT_BRAND_SET = new Set(['samsung','vivo','oppo','xiaomi','realme','motorola','moto','infinix','tecno','oneplus','redmi','poco','itel','iqoo','huawei','honor','iphone']);
-function cleanSeg(t){ return String(t).replace(/✅|✔️|☑️/g,' ').replace(/^[\s.]+/,'').trim(); }
+/* কম্বো তথ্যে ভুলবশত লেখা ক্রমিক সংখ্যা (যেমন "41 VIVO Y20", "42. VIVO Y20") বাদ দেয় */
+const PREFIX_BRANDS = 'samsung|vivo|oppo|realme|redmi|radmi|xiaomi|mi|poco|moto|motorola|infinix|tecno|itel|oneplus|iqoo|huawei|honor|iphone|apple|nokia|symphony|walton|lava|lenovo|google|pixel|sony|asus|nothing|meizu|zte|lg|htc|micromax|gionee|alcatel|galaxy';
+const RE_SERIAL_P = /^\d+\s*[.)\]:]+\s*(?=[A-Za-z])/;
+const RE_SERIAL_B = new RegExp('^\\d+\\s*[-\u2013\u2014]?\\s*(?=(?:' + PREFIX_BRANDS + ')\\b)', 'i');
+function cleanSeg(t){
+  let s = String(t).replace(/✅|✔️|☑️/g,' ').replace(/^[\s.]+/,'').trim();
+  s = s.replace(RE_SERIAL_P,'').replace(RE_SERIAL_B,'');
+  return s.replace(/[\s.,;:]+$/,'').trim();
+}
+/* নামের আগে/পরে বাড়তি ছোট সংখ্যা থাকলে সেটি বাদ দিয়ে বিকল্প নাম (শুধু মেলানোর জন্য; আসল নাম অপরিবর্তিত) */
+function modelAlt(m){
+  const w = String(m).trim().split(/\s+/); let ch = false;
+  while (w.length > 1 && /^\d+[.)]?$/.test(w[0])){ w.shift(); ch = true; }
+  while (w.length > 2 && /^\d{1,2}[.)]?$/.test(w[w.length-1]) && /\d/.test(w[w.length-2])){ w.pop(); ch = true; }
+  return ch ? w.join(' ') : null;
+}
+function dropTail(a){
+  return (a.length >= 3 && /^\d{1,2}[.)]?$/.test(a[a.length-1]) && /\d/.test(a[a.length-2])) ? a.slice(0,-1) : a;
+}
 
 /* local compact for dedupe — used before `compact` is defined elsewhere */
 const dcompact = s => String(s).toLowerCase().replace(/\s+/g,'');
@@ -1065,7 +1114,7 @@ function splitBrands(seg){
   for (let i = 0; i < words.length; i++){
     const w = words[i].toLowerCase();
     const isBrand = SPLIT_BRAND_SET.has(w) || (w === 'one' && (words[i+1] || '').toLowerCase() === 'plus');
-    if (isBrand && cur.length >= 2){ out.push(cur.join(' ')); cur = []; }
+    if (isBrand && cur.length >= 2){ out.push(dropTail(cur).join(' ')); cur = []; }
     cur.push(words[i]);
   }
   if (cur.length) out.push(cur.join(' '));
@@ -1090,14 +1139,15 @@ function fmtCap(c){ return String(c).replace(/\s*mah/i,'').replace(/\s+/g,'') + 
 
 function parseRow(raw){
   const verified = /✅|✔️|☑️/.test(raw);
-  return { verified, models: dedupeModels(phoneList(raw)), head: null };
+  const models = dedupeModels(phoneList(raw));
+  return { verified, models, alts: models.map(modelAlt), head: null };
 }
 
 function parseBatteryRow(raw){
   raw = String(raw);
   const verified = /✅|✔️|☑️/.test(raw);
   const segs = raw.replace(/✅|✔️|☑️/g,' ').split('=').map(x => x.replace(/\s+/g,' ').trim()).filter(Boolean);
-  if (!segs.length) return { verified, models: [], head: { code:'', caps:[], tags:[] } };
+  if (!segs.length) return { verified, models: [], alts: [], head: { code:'', caps:[], tags:[] } };
   let first = segs.shift();
   const caps = [], tags = [], phones = [];
   const m = first.match(/(\d[\d,.]*)\s*mah/i);
@@ -1107,7 +1157,8 @@ function parseBatteryRow(raw){
     else if (/^dual\s*cell$/i.test(sg)) tags.push('Dual Cell');
     else phoneList(sg).forEach(p => phones.push(p));
   });
-  return { verified, models: dedupeModels(phones), head: { code:first, caps, tags } };
+  const pm = dedupeModels(phones);
+  return { verified, models: pm, alts: pm.map(modelAlt), head: { code:first, caps, tags } };
 }
 
 /* ===== SUFFIX-AWARE MATCHING (4G / 5G) ===== */
@@ -1130,21 +1181,104 @@ function classifyMatch(modelName, qc, qBase){
 
 /* ===== STOCK ===== */
 const compactStr = x => String(x).toLowerCase().replace(/\s+/g,'').replace(/radmi/g,'redmi').replace(/not(?=\d)/g,'note');
+const isSuf = k => /[45]g$/.test(k);
+const baseOf = k => k.replace(/[45]g$/,'');
+/* ড্রপডাউনে দেখানো সব মোবাইল ব্র্যান্ড */
+const BRANDS_ALL = ['Samsung','Vivo','Oppo','Realme','Redmi','Xiaomi','Poco','Mi','Infinix','Tecno','Itel','Symphony','Walton','Nokia','Motorola','OnePlus','iQOO','Huawei','Honor','iPhone','Google Pixel','Sony','Lava','Lenovo','Asus','Nothing','Meizu','ZTE','Micromax','Gionee','Alcatel','HTC','LG'];
+const BR_KEYS = [...new Set(BRANDS_ALL.map(b => b.toLowerCase().replace(/\s+/g,'')).concat(['moto','redmi','radmi','mi']))].sort((a,b) => b.length - a.length);
+function stripBrandKey(k){
+  for (const b of BR_KEYS){ if (k.length > b.length && k.startsWith(b)){ k = k.slice(b.length); break; } }
+  if (k.length > 6 && k.startsWith('galaxy')) k = k.slice(6);
+  return k;
+}
 function stockIndex(){
   const src = state.data.stock || [];
   if (state._si && state._si.src === src) return state._si.list;
   const list = src.map(e => ({ e, keys: phoneList(e.name).map(compactStr) }));
-  state._si = { src, list };
+  state._si = { src, list, map: new Map(list.map(x => [x.e, x.keys])) };
   return list;
 }
+function stockKeysOf(e){ stockIndex(); const m = state._si && state._si.map; return (m && m.get(e)) || [compactStr(e.name)]; }
+/* একটি কম্বো সারির সব মডেলের (এবং বাড়তি সংখ্যা বাদ দেওয়া বিকল্প নামের) কী-তালিকা */
+function rowKeyList(row){
+  if (row._k) return row._k;
+  const st = new Set();
+  row.models.forEach((m, i) => { st.add(compactStr(m)); const a = row.alts && row.alts[i]; if (a) st.add(compactStr(a)); });
+  return row._k = [...st];
+}
+/* কী-সেটের সাথে স্টকের কোন কোন এন্ট্রি মিলে।
+   স্টকের নামে 4G/5G না থাকলে (যেমন "Vivo Y20") সেটি কম্বোর "Y20 4G" ও "Y20 5G" উভয়ের সাথেই মিলবে — loose=true */
+function stockMatchSet(keys){
+  const exact = new Set(keys), bases = new Map();
+  exact.forEach(k => { if (isSuf(k)){ const b = baseOf(k); if (!bases.has(b)) bases.set(b, []); bases.get(b).push(k); } });
+  const out = [];
+  stockIndex().forEach(x => {
+    const matched = new Set(); let ex = false, lb = '';
+    x.keys.forEach(k => {
+      if (exact.has(k)){ matched.add(k); ex = true; }
+      else if (!isSuf(k) && bases.has(k)){ bases.get(k).forEach(m => matched.add(m)); lb = k; }
+    });
+    if (matched.size) out.push({ e:x.e, keys:x.keys, matched:[...matched], loose: !ex, base: lb });
+  });
+  return out;
+}
+function stockHits(row){
+  return stockMatchSet(rowKeyList(row)).filter(h => h.e.qty === null || h.e.qty > 0);
+}
+/* কোনো মডেলের 4G ও 5G আলাদা আলাদা কম্বো লিস্টে আছে কি */
+function ambiguousBase(b){
+  const src = state.data.display || [];
+  let c = state._vi;
+  if (!c || c.src !== src){
+    const map = new Map();
+    displayRows().forEach((r, ri) => rowKeyList(r).forEach(k => {
+      if (!isSuf(k)) return;
+      const bb = baseOf(k); let o = map.get(bb);
+      if (!o){ o = { rows:new Set(), suf:new Set() }; map.set(bb, o); }
+      o.rows.add(ri); o.suf.add(k.slice(-2));
+    }));
+    c = state._vi = { src, map };
+  }
+  const o = c.map.get(b);
+  return !!o && o.rows.size >= 2 && o.suf.has('4g') && o.suf.has('5g');
+}
+/* স্টক শেষ হওয়া: একই কম্বো লিস্টের অন্য কোনো মডেল স্টকে থাকলে শূন্য পিসের মডেলটি "শেষ" গণ্য হবে না */
+function outInfo(){
+  const st = state.data.stock || [], dr = state.data.display || [];
+  const c = state._oi;
+  if (c && c.st === st && c.dr === dr) return c;
+  const rows = displayRows();
+  const exactIdx = new Map(), baseIdx = new Map();
+  rows.forEach((r, ri) => rowKeyList(r).forEach(k => {
+    if (!exactIdx.has(k)) exactIdx.set(k, []);
+    exactIdx.get(k).push(ri);
+    if (isSuf(k)){ const b = baseOf(k); if (!baseIdx.has(b)) baseIdx.set(b, []); baseIdx.get(b).push(ri); }
+  }));
+  const rowQty = new Array(rows.length).fill(0), entryRows = new Map();
+  stockIndex().forEach(x => {
+    const rs = new Set();
+    x.keys.forEach(k => {
+      (exactIdx.get(k) || []).forEach(r => rs.add(r));
+      if (!isSuf(k)) (baseIdx.get(k) || []).forEach(r => rs.add(r));
+    });
+    entryRows.set(x.e, rs);
+    rs.forEach(r => { rowQty[r] += (x.e.qty || 0); });
+  });
+  const out = new Set(), covered = new Set();
+  stockIndex().forEach(x => {
+    if (x.e.qty !== 0) return;
+    let cov = false;
+    entryRows.get(x.e).forEach(r => { if (rowQty[r] > 0) cov = true; });
+    (cov ? covered : out).add(x.e);
+  });
+  return state._oi = { st, dr, out, covered };
+}
+function isOut(e){ return outInfo().out.has(e); }
+function isCovered(e){ return outInfo().covered.has(e); }
 function fmtPrice(n){
   if (n === null || n === undefined || n === '') return '—';
   if (typeof n === 'number') return '৳' + n.toLocaleString('en-US');
   return '৳' + esc(String(n));
-}
-function stockHits(models){
-  const set = new Set(models.map(compactStr));
-  return stockIndex().filter(x => x.keys.some(k => set.has(k)) && (x.e.qty === null || x.e.qty > 0));
 }
 function stockMiniBox(hits, searched){
   if (!hits.length){
@@ -1214,6 +1348,7 @@ function parsedRows(){
   const rows = items.map(({raw, type}) => {
     const row = isBat ? parseBatteryRow(raw) : parseRow(raw);
     row.search = isBat ? [...row.models, row.head.code] : row.models;
+    row.searchAlt = isBat ? [...row.alts, null] : row.alts;
     row.glassType = type;
     row.isBat = isBat;
     return row;
@@ -1305,8 +1440,8 @@ function buildResultCard(best, isBat, isLine1){
   const items = [models[best.top.i], ...models.filter((_,i) => i !== best.top.i)];
   let rightBox = '', stockKeys = new Set();
   if (state.cat === 'display' && state.data.stockReady){
-    const hits = stockHits(models);
-    hits.forEach(h => h.keys.forEach(k => stockKeys.add(k)));
+    const hits = stockHits(best.row);
+    hits.forEach(h => h.matched.forEach(k => stockKeys.add(k)));
     rightBox = stockMiniBox(hits, models[best.top.i]);
   } else if (state.cat === 'protector' && best.row.glassType){
     const isUV = best.row.glassType === 'UV';
@@ -1328,11 +1463,16 @@ function buildResultCard(best, isBat, isLine1){
 }
 
 /* ===== MAIN RENDER ===== */
+function stockLooseNote(both){
+  return `<div class="stk-note"><p>⚠️ স্টকে থাকা ডিসপ্লের তথ্যে 4G বা 5G উল্লেখ নেই। তাই দয়া করে স্টকের ডিসপ্লেটি ভালোভাবে যাচাই করে নিন।</p>${both ? '<p>নিচে 4G ও 5G উভয় কম্বো তালিকার তথ্য দেওয়া হলো, যেগুলোর সাথে এই ডিসপ্লে সাপোর্ট করে।</p>' : ''}</div>`;
+}
 function renderDisplays(){
   const list = document.getElementById('displayList');
   if (!list) return;
   const input = document.getElementById('displaySearch');
   if (!input) return;
+  const pn = document.getElementById('partsNote');
+  if (pn) pn.innerHTML = '';
   const raw = input.value;
   const q = raw.trim().toLowerCase();
   const qc = q.replace(/\s+/g,'');
@@ -1341,6 +1481,7 @@ function renderDisplays(){
   document.getElementById('clrBtn').classList.toggle('show', raw.length > 0);
 
   const isBat = state.cat === 'battery';
+  const useStock = state.cat === 'display' && !!state.data.stockReady;
   const total = state.cat === 'protector'
     ? (state.data.glass || []).length + (state.data.uv || []).length
     : (state.data[state.cat] || []).length;
@@ -1363,12 +1504,14 @@ function renderDisplays(){
   const rows = parsedRows();
   const isBrandOnly = BRANDS.some(b => b.toLowerCase() === qc);
 
-  /* ===== Ranked rows ===== */
+  /* ===== Ranked rows (নামের আগে-পরে বাড়তি সংখ্যা থাকলেও মিলবে) ===== */
   const ranked = [];
   rows.forEach((row, idx) => {
     let top = null;
     row.search.forEach((m, i) => {
-      const cls = classifyMatch(m, qc, qBase);
+      let cls = classifyMatch(m, qc, qBase);
+      const a = row.searchAlt && row.searchAlt[i];
+      if (a){ const c2 = classifyMatch(a, qc, qBase); if (c2.score > cls.score) cls = c2; }
       if (cls.score > 0 && (!top || cls.score > top.score)){
         const isCode = isBat && i === row.models.length;
         top = { m, i, score: cls.score, type: cls.type, isCode };
@@ -1401,21 +1544,33 @@ function renderDisplays(){
     suggestNames = suggestions.filter(s => s.type !== 'exact').map(s => s.name);
   }
 
-  /* 4G/5G duplicate detection */
+  /* 4G/5G ভ্যারিয়েন্ট শনাক্ত: একই লিস্টে থাকলে আর জিজ্ঞেস করা হবে না; আলাদা আলাদা লিস্টে থাকলে জিজ্ঞেস করবে */
+  const variantRows = (!queryHasSuffix && !isBat)
+    ? ranked.filter(r => r.row.search.some(m => stripSuffix(m) === qBase)) : [];
   const baseVariants = new Set();
-  if (!queryHasSuffix && !isBat){
-    ranked.forEach(r => {
-      r.row.search.forEach(m => {
-        if (stripSuffix(m) === qBase) baseVariants.add(compact(m));
-      });
-    });
-  }
-  const isDup = !isBat && !hasExact && baseVariants.size >= 2;
+  variantRows.forEach(r => r.row.search.forEach(m => { if (stripSuffix(m) === qBase) baseVariants.add(compact(m)); }));
+  const isDup = !isBat && !hasExact && baseVariants.size >= 2 && variantRows.length >= 2;
 
   const best = ranked[0];
   const isPartial = best.top.type === 'partial';
   const isLine1 = state.viewMode === 'line1';
   let html = '';
+
+  /* স্টকে থাকা মডেলের কার্ড দ্বিতীয় স্থানে (যদি প্রথম কার্ডের মডেল স্টকে না থাকে) */
+  let second = null;
+  if (useStock && !isDup && !isBrandOnly && stockHits(best.row).length === 0){
+    second = ranked.slice(1).find(r => stockHits(r.row).length > 0) || null;
+  }
+  const secondHtml = second
+    ? `<div class="lbl-sub">স্টকে আছে এমন আরেকটি মিলে যাওয়া তালিকা</div>` + buildResultCard(second, isBat, isLine1) : '';
+  const shown = new Set();
+  [best, second].forEach(r => { if (r) r.row.models.forEach(m => shown.add(compact(m))); });
+  const otherNames = suggestNames.filter(n => !shown.has(compact(n)));
+
+  if (useStock && !isDup && !isBrandOnly){
+    const amb = [best, second].filter(Boolean).some(r => stockHits(r.row).some(h => h.loose && ambiguousBase(h.base)));
+    if (amb && pn) pn.innerHTML = stockLooseNote(false);
+  }
 
   if (isBrandOnly){
     const cards = ranked.map(r => buildResultCard(r, isBat, isLine1)).join('');
@@ -1428,32 +1583,39 @@ function renderDisplays(){
       }) +
       cards;
   } else if (isDup){
-    const variantNames = [];
-    const vSeen = new Set();
-    ranked.forEach(r => {
-      r.row.search.forEach(m => {
-        if (stripSuffix(m) === qBase){
-          const k = compact(m);
-          if (!vSeen.has(k)){ vSeen.add(k); variantNames.push(m); }
-        }
+    const looseVar = useStock && variantRows.some(r => stockHits(r.row).some(h => h.loose));
+    if (looseVar){
+      /* স্টকে 4G/5G লেখা নেই, অথচ মডেলের 4G ও 5G আলাদা লিস্টে আছে → দুটি লিস্টই দেখাও, উপরে নোট */
+      if (pn) pn.innerHTML = stockLooseNote(true);
+      html = variantRows.slice(0, 4).map(r => buildResultCard(r, isBat, isLine1)).join('');
+    } else {
+      const variantNames = [];
+      const vSeen = new Set();
+      variantRows.forEach(r => {
+        r.row.search.forEach(m => {
+          if (stripSuffix(m) === qBase){
+            const k = compact(m);
+            if (!vSeen.has(k)){ vSeen.add(k); variantNames.push(m); }
+          }
+        });
       });
-    });
-    html = suggestPromptHTML() +
-      noteBoxHTML(variantNames, {
-        title: 'এই মডেলের একাধিক ভ্যারিয়েন্ট আছে',
-        desc: '4G / 5G উল্লেখ করে সম্পূর্ণ মডেলের নাম লিখে সার্চ করুন।',
-        clickable: true
-      });
+      html = suggestPromptHTML() +
+        noteBoxHTML(variantNames, {
+          title: 'এই মডেলের একাধিক ভ্যারিয়েন্ট আছে',
+          desc: '4G / 5G উল্লেখ করে সম্পূর্ণ মডেলের নাম লিখে সার্চ করুন।',
+          clickable: true
+        });
+    }
   } else if (hasExact){
-    html = buildResultCard(best, isBat, isLine1) +
-      (suggestNames.length ? noteBoxHTML(suggestNames, { clickable: false }) : '');
+    html = buildResultCard(best, isBat, isLine1) + secondHtml +
+      (otherNames.length ? noteBoxHTML(otherNames, { clickable: false }) : '');
   } else if (isPartial && suggestNames.length){
     html = suggestPromptHTML() +
       noteBoxHTML(suggestNames, { isTop: true, clickable: true }) +
-      buildResultCard(best, isBat, isLine1);
+      buildResultCard(best, isBat, isLine1) + secondHtml;
   } else {
-    html = buildResultCard(best, isBat, isLine1) +
-      (suggestNames.length ? noteBoxHTML(suggestNames, { clickable: false }) : '');
+    html = buildResultCard(best, isBat, isLine1) + secondHtml +
+      (otherNames.length ? noteBoxHTML(otherNames, { clickable: false }) : '');
   }
 
   list.innerHTML = html;
@@ -1462,28 +1624,38 @@ function renderDisplays(){
 /* ===== ORDERS (Google Sheet: Orders ট্যাব) ===== */
 state.orderFilter = 'all';
 async function loadOrders(){
-  state.ordersLoading = true;
-  if (!state.ordersLoaded) renderOrders();
+  state.ordersLoading = true; state.ordersFailed = false;
+  renderOrders();                                  // তথ্য আগে থেকে জমা থাকলেও পেজ সঙ্গে সঙ্গে আঁকা হবে (সাদা থাকবে না)
   const wv = _wv;
-  const [d, c] = await Promise.all([quiet('getOrders', null, RT), quiet('getCart', null, RT)]);
-  let ch = false;
-  if (_wv === wv){
-    if (d){ const v = d.orders || []; if (!state.ordersLoaded || !same(v, state.orders)){ state.orders = v; state.ordersLoaded = true; ch = true; } }
-    if (c){ const v = c.cart || []; if (!state.cartLoaded || !same(v, state.cart)){ state.cart = v; state.cartLoaded = true; ch = true; } }
+  try{
+    const [d, c] = await Promise.all([quiet('getOrders', null, RT), quiet('getCart', null, RT)]);
+    if (_wv === wv){
+      if (d){ const v = arrOf(d.orders); if (!state.ordersLoaded || !same(v, state.orders)){ state.orders = v; state.ordersLoaded = true; } }
+      else if (!state.ordersLoaded) state.ordersFailed = true;
+      if (c){ const v = arrOf(c.cart); if (!state.cartLoaded || !same(v, state.cart)){ state.cart = v; state.cartLoaded = true; } }
+    }
+  } finally {
+    state.ordersLoading = false;
   }
-  state.ordersLoading = false;
-  if (ch) renderOrders();
+  renderOrders();
 }
 /* অর্ডারের পণ্য কার্টে "আনা হয়েছে" হলে অর্ডারও "আনা হয়েছে" দেখায় (Cart ট্যাব থেকে) */
-function orderArrived(o){ return (state.cart || []).some(c => String(c.orderId) === String(o.id) && c.status === 'bought'); }
-function orderState(o){ return o.status === 'done' ? 'done' : (orderArrived(o) ? 'arrived' : 'pending'); }
+const jsArg = v => escA(JSON.stringify(v));
+function orderArrived(o){ return (arrOf(state.cart)).some(c => String(c.orderId) === String(o.id) && c.status === 'bought'); }
+function orderState(o){ return o && o.status === 'done' ? 'done' : (orderArrived(o) ? 'arrived' : 'pending'); }
 function setOrderFilter(f){ state.orderFilter = f; renderOrders(); }
 
 function renderOrders(){
   const list = document.getElementById('orderList');
   if (!list) return;
-  if (!state.ordersLoaded){ list.innerHTML = loadingBox(state.ordersLoading ? 'অর্ডার লোড হচ্ছে...' : ''); return; }
-  const all = state.orders.slice().reverse();
+  if (!state.ordersLoaded){
+    const tb = document.getElementById('orderTabs'); if (tb) tb.innerHTML = '';
+    list.innerHTML = (state.ordersFailed && !state.ordersLoading)
+      ? `<div class="empty"><h4>অর্ডার আনা যায়নি</h4><p>ইন্টারনেট চেক করে আবার চেষ্টা করুন</p><button class="btn-blue sm" style="margin-top:10px" onclick="loadOrders()">আবার চেষ্টা করুন</button></div>`
+      : loadingBox('অর্ডার লোড হচ্ছে...');
+    return;
+  }
+  const all = arrOf(state.orders).slice().reverse();
   const cnt = { all: all.length, pending: 0, arrived: 0, done: 0 };
   all.forEach(o => { cnt[orderState(o)]++; });
   const f = state.orderFilter;
@@ -1513,10 +1685,10 @@ function renderOrders(){
       </div>
       <div class="row-actions">
         ${st !== 'done'
-          ? `<button class="btn-xs green" onclick="markDone(${o.id})">✓ পিক</button>`
-          : `<button class="btn-xs" onclick="markPending(${o.id})">↺ পেন্ডিং</button>`}
-        <button class="btn-xs" onclick="editOrder(${o.id})">এডিট</button>
-        <button class="btn-xs red" onclick="deleteOrder(${o.id})">ডিলিট</button>
+          ? `<button class="btn-xs green" onclick="markDone(${jsArg(o.id)})">✓ পিক</button>`
+          : `<button class="btn-xs" onclick="markPending(${jsArg(o.id)})">↺ পেন্ডিং</button>`}
+        <button class="btn-xs" onclick="editOrder(${jsArg(o.id)})">এডিট</button>
+        <button class="btn-xs red" onclick="deleteOrder(${jsArg(o.id)})">ডিলিট</button>
       </div>
     </div>`; }).join('');
 }
@@ -1544,19 +1716,19 @@ function saveNewOrder(){ return once(async () => {
   const d = await act('addOrder', { order: { id: Date.now(), customer, phone, item, price,
     date: new Date().toLocaleDateString('en-GB'), status: 'pending' } });
   if (!d) return;
-  state.orders = d.orders || []; state.ordersLoaded = true; state.cartLoaded = false;
+  state.orders = arrOf(d.orders); state.ordersLoaded = true; state.cartLoaded = false;
   closeModal(); renderOrders(); toast('অর্ডার যোগ হয়েছে — কার্টে গেছে','ok');
 }); }
 
 function editOrder(id){
-  const o = state.orders.find(x => x.id === id);
+  const o = state.orders.find(x => String(x.id) === String(id));
   if (!o) return;
   openModal(modalHead('এডিট অর্ডার') + `
     <div class="field"><label>নাম</label><input id="edOrCustomer" class="input" value="${escA(o.customer)}"></div>
     <div class="field"><label>মোবাইল</label><input id="edOrPhone" class="input" value="${escA(o.phone||'')}"></div>
     <div class="field"><label>পণ্য</label><input id="edOrItem" class="input" value="${escA(o.item)}"></div>
     <div class="field"><label>অগ্রিম মূল্য প্রদান</label><input id="edOrPrice" class="input" type="number" value="${o.price||0}"></div>
-    <button class="btn-primary" onclick="saveEditOrder(${id})">আপডেট</button>
+    <button class="btn-primary" onclick="saveEditOrder(${jsArg(id)})">আপডেট</button>
   `);
 }
 function saveEditOrder(id){ return once(async () => {
@@ -1568,13 +1740,13 @@ function saveEditOrder(id){ return once(async () => {
   };
   const d = await act('updateOrder', { id, patch });
   if (!d) return;
-  state.orders = d.orders || []; state.cartLoaded = false;
+  state.orders = arrOf(d.orders); state.cartLoaded = false;
   closeModal(); renderOrders(); toast('আপডেট হয়েছে','ok');
 }); }
 async function setOrderStatus(id, status, msg){
   const d = await act('updateOrder', { id, patch: { status } });
   if (!d) return;
-  state.orders = d.orders || []; renderOrders(); if (msg) toast(msg,'ok');
+  state.orders = arrOf(d.orders); renderOrders(); if (msg) toast(msg,'ok');
 }
 function markDone(id){ return once(() => setOrderStatus(id, 'done', 'সম্পন্ন')); }
 function markPending(id){ return once(() => setOrderStatus(id, 'pending')); }
@@ -1582,7 +1754,7 @@ function deleteOrder(id){ return once(async () => {
   if (!confirm('অর্ডারটি মুছে ফেলবেন?')) return;
   const d = await act('deleteOrder', { id });
   if (!d) return;
-  state.orders = d.orders || []; state.cartLoaded = false; renderOrders(); toast('মুছে ফেলা হয়েছে','ok');
+  state.orders = arrOf(d.orders); state.cartLoaded = false; renderOrders(); toast('মুছে ফেলা হয়েছে','ok');
 }); }
 
 /* ===== CART — কোম্পানি/মার্কেট থেকে যা কিনতে হবে (এক বক্সে সব) ===== */
@@ -1593,7 +1765,7 @@ async function loadCart(){
   const wv = _wv;
   const d = await quiet('getCart', null, RT);
   if (d && _wv === wv){
-    const v = d.cart || [];
+    const v = arrOf(d.cart);
     if (!state.cartLoaded || !same(v, state.cart)){ state.cart = v; state.cartLoaded = true; renderCart(); }
   }
 }
@@ -1668,7 +1840,7 @@ const gIds = i => (state._cg[i] ? state._cg[i].rows.map(r => r.id) : []);
 function selIds(){ let ids = []; state.cartSel.forEach(i => { ids = ids.concat(gIds(i)); }); return ids; }
 function cartApply(d){
   if (!d) return false;
-  state.cart = d.cart || []; state.cartLoaded = true;
+  state.cart = arrOf(d.cart); state.cartLoaded = true;
   state.cartSelMode = false; state.cartSel = new Set();
   renderCart(); return true;
 }
@@ -1727,14 +1899,31 @@ function displayRows(){
   return rows;
 }
 function qtyClass(q){ return q === null ? 'ok' : (q <= 0 ? 'zero' : 'ok'); }
-function stockList(){ return (state.data.stock || []).slice().sort((a,b) => a.name.localeCompare(b.name)); }
+function stockList(){ return (state.data.stock || []).slice().sort((a,b) => String(a.name).localeCompare(String(b.name))); }
+
+/* সার্চ করা মডেলের সাথে কম্বো-সাপোর্টে মিলে এমন স্টক এন্ট্রি */
+function comboStockFor(q, pool){
+  const qb = baseOf(q);
+  const rows = displayRows();
+  let hit = rows.filter(r => rowKeyList(r).some(k => {
+    const ko = stripBrandKey(k);
+    return k === q || ko === q || (qb && (baseOf(k) === qb || baseOf(ko) === qb));
+  }));
+  if (!hit.length && q.length >= 3) hit = rows.filter(r => rowKeyList(r).some(k => k.includes(q))).slice(0, 40);
+  if (!hit.length) return [];
+  const keys = new Set();
+  hit.forEach(r => rowKeyList(r).forEach(k => keys.add(k)));
+  const poolSet = new Set(pool);
+  return stockMatchSet(keys).map(h => h.e).filter(e => poolSet.has(e))
+    .sort((a,b) => String(a.name).localeCompare(String(b.name)));
+}
 
 function renderStock(){
   const list = document.getElementById('stockList');
   if (!list) return;
   const all = stockList();
   const total = all.reduce((t,e) => t + (e.qty || 0), 0);
-  const out = all.filter(e => e.qty === 0);
+  const out = all.filter(isOut);
   document.getElementById('stockStats').innerHTML =
     `<div class="stat y" onclick="setStockFilter('all')"><div class="v">${bn(all.length)}</div><div class="l">মোট মডেল</div></div>
      <div class="stat g" onclick="setStockFilter('all')"><div class="v">${bn(total)}</div><div class="l">মোট পিস</div></div>
@@ -1743,22 +1932,44 @@ function renderStock(){
   const f = state.stockFilter;
   document.getElementById('stockTabs').innerHTML = [['all','সব',all.length],['out','শেষ',out.length]]
     .map(t => `<button class="tab-btn${f === t[0] ? ' active' : ''}" onclick="setStockFilter('${t[0]}')">${t[1]} <b>${bn(t[2])}</b></button>`).join('');
+  const noteEl = document.getElementById('stockNote');
+  if (noteEl) noteEl.innerHTML = '';
 
   if (!state.data.stockReady && !all.length){ list.innerHTML = loadingBox(state.loading ? 'লোড হচ্ছে...' : 'স্টকের তথ্য পাওয়া যায়নি'); return; }
   const q = compactStr(document.getElementById('stockSearch').value || '');
-  let rows = f === 'out' ? out : all;
-  if (q) rows = rows.filter(e => compactStr(e.name).includes(q));
+  const pool = f === 'out' ? out : all;
+  let rows = pool;
+  if (q){
+    const qb = baseOf(q);
+    rows = pool.filter(e => {
+      const n = compactStr(e.name);
+      return n.includes(q) || (qb !== q && qb && !/[45]g/.test(n) && n.includes(qb));
+    });
+    if (!rows.length){
+      /* হুবহু মডেল না পেলে — একই কম্বোতে যায় এমন স্টকের মডেল দেখাও */
+      rows = comboStockFor(q, pool);
+      if (rows.length && noteEl) noteEl.innerHTML = `<div class="stk-note">ℹ️ সার্চ করা মডেলটি স্টকে থাকা নিচের মডেলের সাথে (একই কম্বো তালিকায়) সাপোর্ট করে।</div>`;
+    }
+  }
   state._sl = rows;
-  if (!rows.length){ list.innerHTML = `<div class="empty"><h4>কিছু পাওয়া যায়নি</h4></div>`; return; }
-  list.innerHTML = rows.slice(0, 300).map((e, i) => `
+  if (!rows.length){
+    if (f === 'out' && !q) list.innerHTML = `<div class="empty"><h4>স্টকের কোনো ডিসপ্লে শেষ হয়নি 👍</h4><p>সব ডিসপ্লেই এখন স্টকে আছে</p></div>`;
+    else if (f === 'out') list.innerHTML = `<div class="empty"><h4>শেষ হওয়া ডিসপ্লের মধ্যে এটি নেই</h4><p>এই মডেলের ডিসপ্লে শেষ হয়নি বা স্টকে নেই</p></div>`;
+    else list.innerHTML = `<div class="empty"><h4>কিছু পাওয়া যায়নি</h4></div>`;
+    return;
+  }
+  list.innerHTML = rows.slice(0, 300).map((e, i) => {
+    const cov = isCovered(e);
+    const sub = [ (e.price !== null && e.price !== undefined && e.price !== '') ? fmtPrice(e.price) : '', e.note ? esc(e.note) : '', cov ? 'কম্বোর অন্য মডেল স্টকে আছে' : '' ].filter(Boolean).join(' · ');
+    return `
     <div class="st-item">
       <div>
         <div class="nm">${esc(e.name)}</div>
-        <div class="pr">${e.price !== null && e.price !== '' ? fmtPrice(e.price) : ''}${e.note ? ' · ' + esc(e.note) : ''}</div>
+        <div class="pr">${sub}</div>
         <div class="row-actions"><button class="btn-xs green" onclick="openStockPlus(${i})">＋ পিস</button><button class="btn-xs" onclick="openStockEdit(${i})">এডিট</button></div>
       </div>
-      <span class="qty-pill ${qtyClass(e.qty)}">${e.qty === null ? '—' : bn(e.qty)}</span>
-    </div>`).join('') + (rows.length > 300 ? `<div class="loadline">প্রথম ৩০০টি দেখানো হচ্ছে — সার্চ করুন</div>` : '');
+      <span class="qty-pill ${cov ? 'low' : qtyClass(e.qty)}">${e.qty === null ? '—' : bn(e.qty)}</span>
+    </div>`; }).join('') + (rows.length > 300 ? `<div class="loadline">প্রথম ৩০০টি দেখানো হচ্ছে — সার্চ করুন</div>` : '');
 }
 function setStockFilter(f){ state.stockFilter = f; renderStock(); }
 
@@ -1766,7 +1977,7 @@ function setStockFilter(f){ state.stockFilter = f; renderStock(); }
 function comboHintHTML(name){
   const k = compactStr(name);
   if (!k) return '';
-  const row = displayRows().find(r => r.models.some(m => compactStr(m) === k));
+  const row = displayRows().find(r => rowKeyList(r).includes(k));
   const ex = (state.data.stock || []).find(e => compactStr(e.name) === k);
   let h = '';
   if (ex) h += `<div class="hint warn">⚠️ এই মডেল স্টকে আগেই আছে (${ex.qty === null ? '—' : ex.qty} পিস) — সেভ করলে পিস বাড়বে।</div>`;
@@ -1774,7 +1985,7 @@ function comboHintHTML(name){
   const idx = stockIndex();
   const chips = row.models.slice(0, 40).map(m => {
     const mk = compactStr(m);
-    const hit = idx.find(x => x.keys.includes(mk) && x.e.qty > 0);
+    const hit = idx.find(x => x.e.qty > 0 && x.keys.some(kk => kk === mk || (!isSuf(kk) && isSuf(mk) && baseOf(mk) === kk)));
     return `<span class="mchip${mk === k ? ' me' : ''}${hit ? ' stk' : ''}">${esc(m)}${hit ? ` <b>${hit.e.qty}</b>` : ''}</span>`;
   }).join('');
   h += `<div class="hint ok"><div class="ht">✅ এই ডিসপ্লে ${row.models.length}টি মডেলের সাথে মিলে${row.verified ? ' · Verified' : ''}</div>
@@ -1787,12 +1998,55 @@ function joinNameC(b, m){
   if (!b) return m; if (!m) return b;
   return compactStr(m).indexOf(compactStr(b)) === 0 ? m : b + ' ' + m;
 }
+const CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+function brandOptions(){
+  const seen = new Set(), out = [];
+  [...BRANDS_ALL, ...(state.data.stock || []).map(e => e.brand)].forEach(b => {
+    b = String(b || '').trim(); if (!b) return;
+    const k = b.toLowerCase().replace(/\s+/g, '');
+    if (seen.has(k)) return; seen.add(k); out.push(b);
+  });
+  return out;
+}
+function getBrandVal(){
+  if (state._brandOther){ const o = document.getElementById('asBrandOther'); return o ? o.value.trim() : ''; }
+  return state._brand || '';
+}
+function ddToggle(){
+  const d = document.getElementById('asDD'); if (!d) return;
+  d.classList.toggle('open');
+  if (d.classList.contains('open')){
+    const m = d.querySelector('.dd-menu');
+    setTimeout(() => { try{ m.scrollIntoView({ block:'nearest', behavior:'smooth' }); }catch(e){} }, 40);
+  }
+}
+function ddPick(i){
+  const d = document.getElementById('asDD'); if (!d) return;
+  const lbl = document.getElementById('asBrandLbl'), oth = document.getElementById('asBrandOther');
+  const opts = d.querySelectorAll('.dd-opt');
+  if (i < 0){
+    state._brandOther = true; state._brand = '';
+    lbl.textContent = 'অন্য ব্র্যান্ড'; lbl.classList.remove('ph');
+    oth.style.display = 'block'; setTimeout(() => oth.focus(), 40);
+  } else {
+    state._brandOther = false; state._brand = state._brands[i];
+    lbl.textContent = state._brand; lbl.classList.remove('ph');
+    oth.style.display = 'none'; oth.value = '';
+  }
+  const idx = i < 0 ? opts.length - 1 : i;
+  opts.forEach((b, k) => b.classList.toggle('on', k === idx));
+  d.classList.remove('open');
+  updateStockHint();
+}
 function openAddStock(){
-  const brands = [...new Set([...BRANDS, ...(state.data.stock || []).map(e => e.brand).filter(Boolean)])];
+  state._brands = brandOptions(); state._brand = ''; state._brandOther = false;
   openModal(modalHead('নতুন ডিসপ্লে / পিস যোগ') + `
     <div class="field"><label>ব্র্যান্ড <span class="req">*</span></label>
-      <input id="asBrand" class="input" list="brandList" placeholder="যেমন: Vivo" oninput="updateStockHint()" autocomplete="off">
-      <datalist id="brandList">${brands.map(b => `<option value="${escA(b)}">`).join('')}</datalist></div>
+      <div class="dd" id="asDD">
+        <button type="button" class="dd-btn" onclick="ddToggle()"><span id="asBrandLbl" class="ph">ব্র্যান্ড বেছে নিন</span>${CHEV}</button>
+        <div class="dd-menu">${state._brands.map((b, i) => `<button type="button" class="dd-opt" onclick="ddPick(${i})">${esc(b)}</button>`).join('')}<button type="button" class="dd-opt other" onclick="ddPick(-1)">✏️ অন্য ব্র্যান্ড (নিজে লিখুন)</button></div>
+      </div>
+      <input id="asBrandOther" class="input" style="display:none;margin-top:6px" placeholder="ব্র্যান্ডের নাম লিখুন" oninput="updateStockHint()" autocomplete="off"></div>
     <div class="field"><label>মডেল <span class="req">*</span></label><input id="asModel" class="input" placeholder="যেমন: Y20" oninput="updateStockHint()" autocomplete="off"></div>
     <div id="asHint"></div>
     <div class="field"><label>প্রাইস (যেভাবে শিটে লেখেন, যেমন IEO)</label><input id="asPrice" class="input"></div>
@@ -1800,11 +2054,11 @@ function openAddStock(){
     <button class="btn-primary" onclick="saveAddStock()">স্টকে যোগ করুন</button>`);
 }
 function updateStockHint(){
-  const name = joinNameC(document.getElementById('asBrand').value, document.getElementById('asModel').value);
+  const name = joinNameC(getBrandVal(), document.getElementById('asModel').value);
   document.getElementById('asHint').innerHTML = name ? comboHintHTML(name) : '';
 }
 function saveAddStock(){ return once(async () => {
-  const brand = document.getElementById('asBrand').value.trim();
+  const brand = getBrandVal();
   const model = document.getElementById('asModel').value.trim();
   const price = document.getElementById('asPrice').value.trim();
   const qty = Math.floor(Number(document.getElementById('asQty').value) || 0);
@@ -1812,13 +2066,15 @@ function saveAddStock(){ return once(async () => {
   if (qty < 1){ toast('পিস ১ বা তার বেশি দিন','err'); return; }
   const d = await act('stockAdd', { brand, model, price, qty });
   if (!d) return;
-  state.data.stock = d.stock || []; closeModal(); renderStock(); toast('স্টক যোগ হয়েছে','ok');
+  state.data.stock = stockArr(d.stock); closeModal(); renderStock(); toast('স্টক যোগ হয়েছে','ok');
 }); }
 function openStockPlus(i, fromList){
   const e = (fromList || state._sl)[i]; if (!e) return;
   state._plus = e;
   openModal(modalHead('পিস যোগ করুন') + `
-    <div class="sel-card"><div><div class="nm">${esc(e.name)}</div><div class="sub">এখন আছে: ${e.qty === null ? '—' : e.qty} পিস</div></div></div>
+    <div class="sel-card"><div><div class="nm">${esc(e.name)}</div>
+      <div class="sub">এখন দোকানে আছে: <b>${e.qty === null ? '—' : e.qty}</b> পিস • বর্তমান দাম: <b>${(e.price !== null && e.price !== undefined && e.price !== '') ? fmtPrice(e.price) : 'দেওয়া নেই'}</b></div>
+      <div class="pnote">⚠️ দাম বাড়লে বা কমলে স্টক তালিকা থেকে <b>এডিট</b> চেপে দাম আপডেট করে নিন।</div></div></div>
     <div class="field"><label>কত পিস এসেছে</label><input id="spQty" class="input" type="number" min="1" value="1"></div>
     <button class="btn-primary" onclick="saveStockPlus()">যোগ করুন</button>`);
 }
@@ -1827,7 +2083,7 @@ function saveStockPlus(){ return once(async () => {
   if (delta < 1){ toast('পিস ১ বা তার বেশি দিন','err'); return; }
   const d = await act('stockAdjust', { name: state._plus.name, delta });
   if (!d) return;
-  state.data.stock = d.stock || []; closeModal(); renderStock(); if (state.salesData) renderSales(); toast('পিস বেড়েছে','ok');
+  state.data.stock = stockArr(d.stock); closeModal(); renderStock(); if (state.salesData) renderSales(); toast('পিস বেড়েছে','ok');
 }); }
 function openStockEdit(i){
   const e = state._sl[i]; if (!e) return;
@@ -1843,13 +2099,13 @@ function openStockEdit(i){
 function saveStockEdit(){ return once(async () => {
   const d = await act('stockUpdate', { name: state._plus.name, price: document.getElementById('seP').value.trim(), qty: Math.floor(Number(document.getElementById('seQ').value) || 0) });
   if (!d) return;
-  state.data.stock = d.stock || []; closeModal(); renderStock(); toast('আপডেট হয়েছে','ok');
+  state.data.stock = stockArr(d.stock); closeModal(); renderStock(); toast('আপডেট হয়েছে','ok');
 }); }
 function deleteStockItem(){ return once(async () => {
   if (!confirm('এই ডিসপ্লে স্টক তালিকা থেকে মুছে ফেলবেন?')) return;
   const d = await act('stockDelete', { name: state._plus.name });
   if (!d) return;
-  state.data.stock = d.stock || []; closeModal(); renderStock(); toast('মুছে ফেলা হয়েছে','ok');
+  state.data.stock = stockArr(d.stock); closeModal(); renderStock(); toast('মুছে ফেলা হয়েছে','ok');
 }); }
 
 /* ===== SALES — সেলের হিসাব (Google Sheet: Sales ট্যাব) ===== */
@@ -1868,32 +2124,28 @@ function renderSales(){
   if (!box) return;
   const sd = state.salesData;
   if (!sd){ box.innerHTML = loadingBox(); return; }
-  const out = (state.data.stock || []).filter(e => e.qty === 0);
-  state._outL = out;
+  const sales = Array.isArray(sd.sales) ? sd.sales : [];
+  const months = Array.isArray(sd.months) ? sd.months : [];
+  const top = Array.isArray(sd.top) ? sd.top : [];
   const today = todayStr();
-  const todayPcs = sd.month === sd.currentMonth ? sd.sales.filter(s => s.date === today).reduce((t,s) => t + s.qty, 0) : null;
-  const chip = (e, i) => `<span class="mchip btn" onclick="openStockPlus(${i}, state._outL)">${esc(e.name)}</span>`;
+  const todayPcs = sd.month === sd.currentMonth ? sales.filter(s => s.date === today).reduce((t,s) => t + (s.qty || 0), 0) : null;
   box.innerHTML = `
     <select class="month-sel" onchange="loadSales(this.value)">
-      ${sd.months.map(m => `<option value="${m.month}"${m.month === sd.month ? ' selected' : ''}>${monthLabel(m.month)} — ${bn(m.pieces)} পিস</option>`).join('')}
+      ${months.map(m => `<option value="${m.month}"${m.month === sd.month ? ' selected' : ''}>${monthLabel(m.month)} — ${bn(m.pieces)} পিস</option>`).join('')}
     </select>
-    <div class="stats">
-      <div class="stat y"><div class="v">${bn(sd.monthPieces)}</div><div class="l">${monthLabel(sd.month)} — সেল (পিস)</div></div>
-      <div class="stat g"><div class="v">${bn(sd.totalPieces)}</div><div class="l">মোট সেল (পিস)</div></div>
+    <div class="stats stats3">
+      <div class="stat y"><div class="v">${bn(sd.monthPieces || 0)}</div><div class="l">${monthLabel(sd.month)} সেল (পিস)</div></div>
+      <div class="stat g"><div class="v">${bn(sd.totalPieces || 0)}</div><div class="l">মোট সেল (পিস)</div></div>
       <div class="stat o"><div class="v">${todayPcs === null ? '—' : bn(todayPcs)}</div><div class="l">আজকের সেল (পিস)</div></div>
-      <div class="stat r" onclick="openStockOut()"><div class="v">${bn(out.length)}</div><div class="l">শেষ হয়ে গেছে</div></div>
     </div>
     ${sd.monthRevenue > 0 ? `<div class="hint ok" style="margin-top:0">এই মাসের বিক্রি: <b>৳${sd.monthRevenue.toLocaleString('en-US')}</b> (যেগুলোতে মূল্য দেওয়া হয়েছে)</div>` : ''}
     <button class="btn-primary mt" onclick="openAddSale()">＋ নতুন সেল যোগ করুন</button>
 
-    <div class="sec-title"><span>শেষ হয়ে গেছে</span><b>${bn(out.length)}</b></div>
-    ${out.length ? `<div class="mchips">${out.slice(0, 60).map((e,i) => chip(e, i)).join('')}</div>` : `<div class="hint">কোনো ডিসপ্লে শেষ হয়নি 👍</div>`}
+    ${top.length ? `<div class="sec-title"><span>এই মাসের সেরা বিক্রি</span></div>
+      <div class="list">${top.map(t => `<div class="st-item"><div class="nm">${esc(t.name)}</div><span class="qty-pill ok">${bn(t.qty)}</span></div>`).join('')}</div>` : ''}
 
-    ${sd.top.length ? `<div class="sec-title"><span>এই মাসের সেরা বিক্রি</span></div>
-      <div class="list">${sd.top.map(t => `<div class="st-item"><div class="nm">${esc(t.name)}</div><span class="qty-pill ok">${bn(t.qty)}</span></div>`).join('')}</div>` : ''}
-
-    <div class="sec-title"><span>সেলের তালিকা — ${monthLabel(sd.month)}</span><b>${bn(sd.monthCount)}</b></div>
-    <div class="list">${sd.sales.length ? sd.sales.map((s, i) => `
+    <div class="sec-title"><span>সেলের তালিকা — ${monthLabel(sd.month)}</span><b>${bn(sd.monthCount || 0)}</b></div>
+    <div class="list">${sales.length ? sales.map((s, i) => `
       <div class="row">
         <div class="row-top"><div class="row-name" style="white-space:normal">${esc(s.name)}</div><span class="sbadge cnt">×${s.qty}</span></div>
         <div class="row-sub">${esc(s.date)} • ${esc(s.time)}${s.price ? ' • ৳' + s.price + '/পিস' : ''}${s.note ? ' • ' + esc(s.note) : ''}</div>
@@ -1915,18 +2167,61 @@ function openAddSale(){
     </div>`);
   setTimeout(() => { const i = document.getElementById('slSearch'); i && i.focus(); }, 50);
 }
+/* সেল ফর্মের সার্চ: লেখা অনুযায়ী সবচেয়ে মিল থাকা সর্বোচ্চ ৩টি; 4G/5G বা পুরো নাম হুবহু লিখতে হবে না */
+const SL_MAX = 3;
+function diceCoef(a, b){
+  if (a.length < 2 || b.length < 2) return 0;
+  const bg = s => { const m = new Map(); for (let i = 0; i < s.length - 1; i++){ const t = s.substr(i, 2); m.set(t, (m.get(t) || 0) + 1); } return m; };
+  const A = bg(a), B = bg(b); let inter = 0;
+  A.forEach((v, k) => { if (B.has(k)) inter += Math.min(v, B.get(k)); });
+  return 2 * inter / ((a.length - 1) + (b.length - 1));
+}
+function slScore(e, q, qb, toks){
+  let best = 0;
+  stockKeysOf(e).forEach(k => {
+    const ko = stripBrandKey(k);
+    let sc = 0;
+    if (k === q || ko === q) sc = 1000;
+    else if (qb && (baseOf(k) === qb || baseOf(ko) === qb)) sc = 900;
+    else if (k.startsWith(q) || ko.startsWith(q)) sc = 700 + 100 * q.length / k.length;
+    else if (k.includes(q)) sc = 600 + 100 * q.length / k.length;
+    else if (toks.length > 1 && toks.every(t => k.includes(t))) sc = 500 + 50 * q.length / k.length;
+    else if (q.length >= 3){ const d = Math.max(diceCoef(k, q), diceCoef(ko, q)); if (d >= 0.6) sc = 300 * d; }
+    if (sc > best) best = sc;
+  });
+  return best;
+}
 function slSearchInput(){
-  const q = compactStr(document.getElementById('slSearch').value || '');
+  const raw = document.getElementById('slSearch').value || '';
+  const q = compactStr(raw);
   const box = document.getElementById('slSugg');
   if (!q){ box.innerHTML = ''; state._sugg = []; return; }
+  const qb = baseOf(q);
+  const toks = raw.toLowerCase().split(/[\s,.\-_\/]+/).map(compactStr).filter(Boolean);
   const inStock = (state.data.stock || []).filter(e => e.qty === null || e.qty > 0);
-  const direct = inStock.filter(e => compactStr(e.name).includes(q)).slice(0, 8).map(e => ({ e, tag: '' }));
-  const have = new Set(direct.map(x => x.e.name));
-  /* সরাসরি মডেল স্টকে না থাকলে — একই ডিসপ্লে লাগে এমন (কম্বো) স্টক দেখাও */
-  let combo = [];
-  const row = displayRows().find(r => r.models.some(m => compactStr(m) === q)) || displayRows().find(r => r.models.some(m => compactStr(m).includes(q)));
-  if (row) combo = stockHits(row.models).map(x => x.e).filter(e => !have.has(e.name)).slice(0, 6).map(e => ({ e, tag: 'একই ডিসপ্লে (কম্বো)' }));
-  const list = direct.concat(combo);
+  let scored = [];
+  inStock.forEach(e => { const sc = slScore(e, q, qb, toks); if (sc > 0) scored.push({ e, sc }); });
+  scored.sort((a, b) => b.sc - a.sc || String(a.e.name).length - String(b.e.name).length);
+  let list = [];
+  if (scored.length && scored[0].sc >= 900){
+    const top = scored[0].sc;                      // হুবহু মিললে শুধু সেই একটি/দুটি
+    list = scored.filter(x => x.sc === top).slice(0, SL_MAX).map(x => ({ e: x.e, tag: '' }));
+  } else {
+    list = scored.slice(0, SL_MAX).map(x => ({ e: x.e, tag: '' }));
+    if (list.length < SL_MAX){
+      /* সরাসরি মডেল স্টকে না থাকলে — একই ডিসপ্লে লাগে এমন (কম্বো) স্টক */
+      const have = new Set(list.map(x => x.e));
+      const rows = displayRows();
+      const qo = stripBrandKey(q);
+      let hit = rows.filter(r => rowKeyList(r).some(k => k === q || stripBrandKey(k) === q || baseOf(stripBrandKey(k)) === baseOf(qo)));
+      if (!hit.length && q.length >= 3) hit = rows.filter(r => rowKeyList(r).some(k => k.includes(q))).slice(0, 20);
+      if (hit.length){
+        const keys = new Set(); hit.forEach(r => rowKeyList(r).forEach(k => keys.add(k)));
+        stockMatchSet(keys).map(h => h.e).filter(e => (e.qty === null || e.qty > 0) && !have.has(e))
+          .slice(0, SL_MAX - list.length).forEach(e => list.push({ e, tag: 'একই ডিসপ্লে (কম্বো)' }));
+      }
+    }
+  }
   state._sugg = list;
   box.innerHTML = list.length
     ? `<div class="sugg">${list.map((x, i) => `<div class="sugg-item" onclick="pickSale(${i})"><div>${esc(x.e.name)}${x.tag ? `<small>${x.tag}</small>` : ''}</div><span class="qty-pill ${qtyClass(x.e.qty)}">${x.e.qty === null ? '—' : x.e.qty}</span></div>`).join('')}</div>`
@@ -1948,7 +2243,7 @@ function saveSale(){ return once(async () => {
   if (e.qty !== null && qty > e.qty){ toast('স্টকে মাত্র ' + e.qty + ' পিস আছে','err'); return; }
   const d = await act('addSale', { name: e.name, qty, price: document.getElementById('slPrice').value.trim(), note: document.getElementById('slNote').value.trim() });
   if (!d) return;
-  state.data.stock = d.stock || []; state.salesData = d.salesData;
+  state.data.stock = stockArr(d.stock); state.salesData = d.salesData;
   closeModal(); renderSales(); toast('সেল যোগ হয়েছে — স্টক কমেছে','ok');
 }); }
 function cancelSale(i){ return once(async () => {
@@ -1956,7 +2251,7 @@ function cancelSale(i){ return once(async () => {
   if (!confirm('এই সেল বাতিল করলে ' + s.qty + ' পিস স্টকে ফিরে যাবে। বাতিল করবেন?')) return;
   const d = await act('deleteSale', { id: s.id, month: state.salesData.month });
   if (!d) return;
-  state.data.stock = d.stock || []; state.salesData = d.salesData; renderSales(); toast('সেল বাতিল, স্টক ফিরেছে','ok');
+  state.data.stock = stockArr(d.stock); state.salesData = d.salesData; renderSales(); toast('সেল বাতিল, স্টক ফিরেছে','ok');
 }); }
 
 function openModal(html){
@@ -1972,6 +2267,7 @@ function openSettings(){
       <h3>সেটিংস</h3>
       <button class="modal-close" onclick="closeModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
+    <p style="text-align:center;color:var(--muted);font-size:12.5px;font-weight:600;padding:22px 8px 18px">কোনো সেটিংস যুক্ত করা হয়নি</p>
   `);
 }
 
@@ -1992,10 +2288,32 @@ function toast(msg, type){
   setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 250); }, 2400);
 }
 
+/* ===== সুরক্ষা: কোনো একটি অংশ আঁকতে সমস্যা হলে পুরো পেজ সাদা হবে না, লাইভ সিঙ্কও থেমে যাবে না ===== */
+(function(){
+  const MAP = { renderOrders:'orderList', renderCart:'cartList', renderStock:'stockList', renderSales:'salesBody', renderDisplays:'displayList', renderHome:'homeStats' };
+  Object.keys(MAP).forEach(name => {
+    const orig = window[name];
+    if (typeof orig !== 'function') return;
+    window[name] = function(){
+      try{ return orig.apply(this, arguments); }
+      catch(err){
+        console.error(name, err);
+        const box = document.getElementById(MAP[name]);
+        if (box) box.innerHTML = '<div class="empty"><h4>পেজটি দেখাতে সমস্যা হয়েছে</h4><p>রিফ্রেশ করে আবার চেষ্টা করুন</p><button class="btn-blue sm" style="margin-top:10px" onclick="refreshAll()">আবার চেষ্টা করুন</button></div>';
+      }
+    };
+  });
+})();
+
 (function init(){
   const y = document.getElementById('year'); if (y) y.textContent = new Date().getFullYear();
+  document.addEventListener('click', e => {      // ড্রপডাউনের বাইরে চাপলে বন্ধ
+    const d = document.getElementById('asDD');
+    if (d && d.classList.contains('open') && !d.contains(e.target)) d.classList.remove('open');
+  });
   const had = snapRestore();          // আগের সেভ করা তথ্য সঙ্গে সঙ্গে দেখাও
   renderHome(); renderDisplays();
+  renderOrders(); renderCart();
   if (had) renderStock();
   liveSync({});                       // একই সময়ে লাইভ তথ্য আনো (রিফ্রেশ আইকন ঘুরবে)
 })();
@@ -2076,4 +2394,6 @@ function toast(msg, type){
   </script>
 </body>
 </html>
+
+
 
